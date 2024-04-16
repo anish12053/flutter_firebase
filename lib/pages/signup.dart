@@ -18,6 +18,8 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
+  bool signingup = false;
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -103,7 +105,7 @@ class _SignUpState extends State<SignUp> {
             ),
             ElevatedButton(onPressed: (){
               _signUp();
-            }, child: Text("Signup",)),
+            }, child:signingup? CircularProgressIndicator(color: Colors.blue,): Text("Signup",)),
           ],
         ),
       ),
@@ -111,12 +113,17 @@ class _SignUpState extends State<SignUp> {
   }
 
   void _signUp() async {
+    setState(() {
+      signingup = true;
+    });
     String username  = _usernameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
     User? user  = await _auth.signUpWithEmailAndPassword(email, password);
-
+setState(() {
+  signingup = false;
+});
     if(user!=null){
       print("User is successfully created");
       Navigator.push(context,  MaterialPageRoute(builder: (context) => HomePage()),);

@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_firebase/auth/firebase_auth_services.dart';
 import 'package:flutter_firebase/pages/homepage.dart';
 import 'package:flutter_firebase/pages/signup.dart';
 
@@ -11,6 +13,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  final FireBaseAuthServices _auth = FireBaseAuthServices();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  bool signingin = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.grey,
               ),
               child: TextField(
+                controller: _emailController,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   fillColor: Colors.grey,
@@ -53,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.grey,
               ),
               child: TextField(
+                controller: _passwordController,
                 obscureText: true,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
@@ -66,12 +84,9 @@ class _LoginPageState extends State<LoginPage> {
               height: MediaQuery.of(context).size.height*0.01,
             ),
             ElevatedButton(onPressed: (){
-               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
+              _signIn();
             },
-            child: Text("Login",)),
+            child:signingin? CircularProgressIndicator(color: Colors.blue,): Text("Login",)),
             // SizedBox(
             //   height: MediaQuery.of(context).size.height*0.1,
             // ),
@@ -95,4 +110,26 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  void _signIn() async {
+setState(() {
+  signingin = true;
+});
+
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user  = await _auth.signInWithEmailAndPassword(email, password);
+setState(() {
+  signingin = false;
+});
+    if(user!=null){
+      print("User is successfully SignIn");
+      Navigator.push(context,  MaterialPageRoute(builder: (context) => HomePage()),);
+    }else{
+      print("Some error Ocurred");
+    }
+
+  }
+
 }

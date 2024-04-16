@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/pages/login.dart';
 
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage> {
             fontSize: 30,
           ),),
           ElevatedButton(onPressed: (){
+            FirebaseAuth.instance.signOut();
+            print("Sign out");
             Navigator.pushReplacement(context, 
             MaterialPageRoute(builder: (context) => LoginPage()));
           }, child: Text("SignOut")),
