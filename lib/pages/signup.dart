@@ -1,5 +1,6 @@
-import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/auth/firebase_auth_services.dart';
 import 'package:flutter_firebase/pages/homepage.dart';
 
 class SignUp extends StatefulWidget {
@@ -10,6 +11,21 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+
+  final FireBaseAuthServices _auth = FireBaseAuthServices();
+
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +50,7 @@ class _SignUpState extends State<SignUp> {
                 color: Colors.grey,
               ),
               child: TextField(
+                controller: _usernameController,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   fillColor: Colors.grey,
@@ -52,6 +69,7 @@ class _SignUpState extends State<SignUp> {
                 color: Colors.grey,
               ),
               child: TextField(
+                controller: _emailController,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                   fillColor: Colors.grey,
@@ -70,6 +88,7 @@ class _SignUpState extends State<SignUp> {
                 color: Colors.grey,
               ),
               child: TextField(
+                controller: _passwordController,
                 obscureText: true,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
@@ -83,14 +102,28 @@ class _SignUpState extends State<SignUp> {
               height: MediaQuery.of(context).size.height*0.01,
             ),
             ElevatedButton(onPressed: (){
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
+              _signUp();
             }, child: Text("Signup",)),
           ],
         ),
       ),
     );
   }
+
+  void _signUp() async {
+    String username  = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user  = await _auth.signUpWithEmailAndPassword(email, password);
+
+    if(user!=null){
+      print("User is successfully created");
+      Navigator.push(context,  MaterialPageRoute(builder: (context) => HomePage()),);
+    }else{
+      print("Some error Ocurred");
+    }
+
+  }
+
 }
