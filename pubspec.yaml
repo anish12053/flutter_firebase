@@ -39,7 +39,8 @@ dependencies:
   firebase_auth:  
   cloud_firestore: 
   firebase_storage:
-  fluttertoast: 
+  fluttertoast:
+  web_socket_channel:  
 
 dev_dependencies:
   flutter_test:

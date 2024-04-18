@@ -125,7 +125,7 @@ setState(() {
 });
     if(user!=null){
       print("User is successfully SignIn");
-      Navigator.push(context,  MaterialPageRoute(builder: (context) => HomePage()),);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
     }else{
       print("Some error Ocurred");
     }
